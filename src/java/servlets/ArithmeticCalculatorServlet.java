@@ -16,9 +16,9 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author 470778
  */
-public class AgeCalculatorServlet extends HttpServlet {
+public class ArithmeticCalculatorServlet extends HttpServlet {
 
-
+    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -32,9 +32,8 @@ public class AgeCalculatorServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        getServletContext().getRequestDispatcher("/WEB-INF/agecalculator.jsp").forward(request, response);
-        
+        request.setAttribute("result", "---");
+        getServletContext().getRequestDispatcher("/WEB-INF/arithmeticcalculator.jsp").forward(request, response);
     }
 
     /**
@@ -50,15 +49,29 @@ public class AgeCalculatorServlet extends HttpServlet {
             throws ServletException, IOException {
         
         try {
-            int age = Integer.parseInt(request.getParameter("age"));
-            request.setAttribute("calculatedAge", "Your age next birthday will be " + (age + 1));
-            request.setAttribute("ageEntered", age);
+            int num1 = Integer.parseInt(request.getParameter("firstNum"));
+            int num2 = Integer.parseInt(request.getParameter("secondNum"));
+            if (request.getParameter("add") != null) {
+                request.setAttribute("result", (num1 + num2));
+            }
+            if (request.getParameter("sub") != null) {
+                request.setAttribute("result", (num1 - num2));
+            }
+            if (request.getParameter("mul") != null) {
+                request.setAttribute("result", (num1 * num2));
+            }
+            if (request.getParameter("mod") != null && num2 != 0) {
+                request.setAttribute("result", (num1 % num2));
+            } else if (request.getParameter("mod") != null && num2 == 0) {
+                request.setAttribute("result", "CAN'T DIVIDE BY 0");
+            }
+        request.setAttribute("firstNumber", num1);
+        request.setAttribute("secondNumber", num2);
         } catch (NumberFormatException e) {
-            request.setAttribute("calculatedAge", "You must give your current age");
+            request.setAttribute("result", "invalid");
         }
         
-        getServletContext().getRequestDispatcher("/WEB-INF/agecalculator.jsp").forward(request, response);
-                
+        getServletContext().getRequestDispatcher("/WEB-INF/arithmeticcalculator.jsp").forward(request, response);
         
     }
 
